@@ -230,6 +230,14 @@ func truncate(s string, maxLen int) string {
 	return s[:maxLen-3] + "..."
 }
 
+func padOrTruncate(s string, length int) string {
+	s = strings.Join(strings.Fields(s), " ")
+	if len(s) > length {
+		return s[:length-1] + "…"
+	}
+	return fmt.Sprintf("%-*s", length, s)
+}
+
 func buildSearchLines(conversations []Conversation) ([]string, map[string]Conversation) {
 	var lines []string
 	convMap := make(map[string]Conversation)
@@ -248,8 +256,13 @@ func buildSearchLines(conversations []Conversation) ([]string, map[string]Conver
 
 			text := truncate(msg.Text, 100)
 			ts := formatTimestamp(msg.Ts)
+			projectPad := padOrTruncate(project, 25)
 
-			line := fmt.Sprintf("%s:%d\t%s\t%s\t%s", conv.SessionID, i, ts, project, text)
+			// Format: id \t date \t project \t message
+			// Colors: date=dim, project=yellow/bold, message=white
+			// Use │ separator for visual clarity
+			line := fmt.Sprintf("%s:%d\t\033[90m%s\033[0m \033[90m│\033[0m \033[1;33m%s\033[0m \033[90m│\033[0m %s",
+				conv.SessionID, i, ts, projectPad, text)
 			lines = append(lines, line)
 		}
 	}

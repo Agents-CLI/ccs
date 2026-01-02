@@ -28,11 +28,11 @@ checksum:
 
 brews:
   - repository:
-      owner: brtkwr
+      owner: agents-cli
       name: homebrew-tap
       token: "{{ .Env.HOMEBREW_TAP_TOKEN }}"
     directory: Formula
-    homepage: "https://github.com/brtkwr/ccs"
+    homepage: "https://github.com/agents-cli/ccs"
     description: "Search and resume Claude Code conversations using fzf"
     license: "MIT"
     dependencies:
